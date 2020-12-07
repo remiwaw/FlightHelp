@@ -1,0 +1,95 @@
+import dependencies.dependencies.*
+import dependencies.Application
+import dependencies.Versions
+import dependencies.AnnotationProcessing
+import dependencies.Java
+
+apply plugin: 'com.android.application'
+apply plugin: 'dagger.hilt.android.plugin'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
+
+android {
+	dataBinding.enabled = true
+	compileSdkVersion Versions.compilesdk
+	defaultConfig {
+		applicationId Application.id
+		minSdkVersion Versions.minsdk
+		targetSdkVersion Versions.targetsdk
+		versionCode Application.version_code
+		versionName Application.version_name
+
+		testInstrumentationRunner AndroidTestDependencies.instrumentation_runner
+	}
+
+	buildTypes {
+		debug {
+			minifyEnabled false
+			manifestPlaceholders = [enableCrashReporting:"false"]
+		}
+		release {
+			minifyEnabled false
+			manifestPlaceholders = [enableCrashReporting:"true"]
+		}
+	}
+
+	compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+
+	kotlinOptions {
+		jvmTarget = Java.java_version
+	}
+
+	sourceSets {
+		test.resources.srcDirs += 'src/test/res'
+	}
+
+	testOptions {
+		unitTests.all {
+			useJUnitPlatform()
+		}
+	}
+
+}
+
+
+dependencies {
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	// Hilt
+	implementation Dependencies.hiltAndroid
+	implementation Dependencies.hiltViewModel
+	kapt AnnotationProcessing.hiltAndroidCompiler
+	kapt AnnotationProcessing.hiltCompiler
+
+	// Kotlin
+	implementation Dependencies.kotlin_standard_library
+	implementation Dependencies.kotlin_reflect
+	implementation Dependencies.ktx
+
+
+	// Support
+	implementation SupportDependencies.appcompat
+	implementation SupportDependencies.constraintlayout
+	implementation SupportDependencies.material_design
+	implementation Dependencies.navigation_runtime
+	implementation Dependencies.navigation_ui
+	implementation Dependencies.navigation_fragment
+	implementation Dependencies.room_runtime
+	implementation Dependencies.room_ktx
+	kapt AnnotationProcessing.room_compiler
+	implementation Dependencies.corbind
+	implementation Dependencies.material_dialogs
+
+	// Retrofit
+	implementation Dependencies.retrofit
+	implementation Dependencies.retrofit_gson
+	implementation Dependencies.httpLoggingInterceptor
+
+	// Test dependencies
+	testImplementation TestDependencies.hiltAndroidTesting
+}
