@@ -61,7 +61,8 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		departureDateInput.setOnClickListener { createCalendarPicker().show() }
+		setupOutDateCalendar()
+		setupPassengerNumbersPicker()
 
 		observeStateChanges()
 
@@ -82,6 +83,17 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 					)
 				}
 		}
+	}
+
+	private fun setupPassengerNumbersPicker() {
+		listOf(adultsNumberPicker, teenNumberPicker, childrenNumberPicker).forEach {
+			it.minValue = 0
+			it.maxValue = 99
+		}
+	}
+
+	private fun setupOutDateCalendar() {
+		departureDateInput.setOnClickListener { createCalendarPicker().show() }
 	}
 
 	private fun createCalendarPicker(): DatePicker {

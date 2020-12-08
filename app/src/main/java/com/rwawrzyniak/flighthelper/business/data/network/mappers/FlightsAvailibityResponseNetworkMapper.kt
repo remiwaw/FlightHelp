@@ -3,19 +3,35 @@ package com.rwawrzyniak.flighthelper.business.data.network.mappers
 import com.rwawrzyniak.flighthelper.business.domain.model.AvailabilityResponse
 import com.rwawrzyniak.flighthelper.business.domain.util.EntityMapper
 import com.rwawrzyniak.flighthelper.presentation.flights.FlightModel
+import com.rwawrzyniak.flighthelper.presentation.flights.FlightSearchResultModel
 import javax.inject.Inject
 
-class FlightsAvailibityResponseNetworkMapper @Inject constructor(): EntityMapper<AvailabilityResponse, List<FlightModel>> {
+class FlightsAvailibityResponseNetworkMapper @Inject constructor(): EntityMapper<AvailabilityResponse, FlightSearchResultModel> {
 
-	override fun mapFromEntity(response: AvailabilityResponse): List<FlightModel> {
+	override fun mapFromEntity(response: AvailabilityResponse): FlightSearchResultModel {
 		val trip = response.trips.first()
 		val firstDate = trip.dates.first()
 		val flightDateOut = firstDate.dateOut
 		val flights = firstDate.flights
-		return flights.map { FlightModel(flightDateOut, it.flightNumber, it.duration, it.regularFare.fares.first().amount) }
+
+		val flightsModel = flights.map {
+			FlightModel(
+				flightDate = flightDateOut,
+				flightNumber = it.flightNumber,
+				duration = it.duration,
+				priceWithCurrency = it.regularFare.fares.first().amount,
+				currency = response.currency
+			)
+		}
+
+		return FlightSearchResultModel(
+			originName = trip.originName,
+			destinationNAme = trip.destinationName,
+			flights = flightsModel
+		)
 	}
 
-	override fun mapToEntity(domainModel: List<FlightModel>): AvailabilityResponse {
+	override fun mapToEntity(domainModel: FlightSearchResultModel): AvailabilityResponse {
 		error("Not used")
 	}
 }

@@ -79,8 +79,8 @@ class FlightsAvailabilityViewModel
 
 			val viewState = when(result){
 				is ApiResult.Success -> {
-					val flights: List<FlightModel> = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
-					UIState.Success(FlightAvailabilityViewState(flights))
+						val flightSearchResultModel: FlightSearchResultModel = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
+						UIState.Success(FlightAvailabilityViewState(flightSearchResultModel.flights))
 				}
 				is ApiResult.GenericError -> UIState.Error(result.error?.message ?: "Unknown error")
 				ApiResult.NetworkError -> UIState.Error("Network error")
