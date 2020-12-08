@@ -34,4 +34,5 @@ object Versions {
     const val junit_4_version = "4.12"
     const val fragment_version = "1.2.0"
     const val androidx_test_ext = "1.1.1"
+	const val material_calendar_version = "1.8.0-rc01"
 }

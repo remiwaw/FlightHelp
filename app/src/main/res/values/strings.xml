@@ -12,5 +12,11 @@
 
 	<string name="no_connectivity_title">No connectivity</string>
 	<string name="no_connectivity_explain">Because there is no internet connection app won\'\' be working correctly. Caching is still in progress.</string>
+	<string name="noData">No data</string>
+	<string name="retry">Retry</string>
+	<string name="originStation">From</string>
+	<string name="destinationStation">To</string>
+	<string name="departureDate">Departure date</string>
+	<string name="search">search</string>
 
 </resources>

@@ -82,7 +82,7 @@ object ApplicationModule {
 
 	@Singleton
 	@Provides
-	fun provideRyanairApi(retrofitBuilder: Retrofit.Builder, httpClient: OkHttpClient): RyanairApi =
+	fun provideRyanairApi(@Named("default") retrofitBuilder: Retrofit.Builder, httpClient: OkHttpClient): RyanairApi =
 		retrofitBuilder
 			.client(httpClient)
 			.build()

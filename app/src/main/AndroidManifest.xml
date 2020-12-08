@@ -3,7 +3,9 @@
     package="com.rwawrzyniak.flighthelper">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <application
+	<uses-permission android:name="android.permission.INTERNET" />
+
+	<application
 		android:name="com.rwawrzyniak.flighthelper.presentation.BaseApplication"
 		android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

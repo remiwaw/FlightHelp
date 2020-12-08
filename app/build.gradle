@@ -84,6 +84,8 @@ dependencies {
 	kapt AnnotationProcessing.room_compiler
 	implementation Dependencies.corbind
 	implementation Dependencies.material_dialogs
+	implementation Dependencies.lifecycle_coroutines
+	implementation Dependencies.materialCalendar
 
 	// Retrofit
 	implementation Dependencies.retrofit

@@ -29,5 +29,5 @@ object Dependencies {
     const val retrofit = "com.squareup.retrofit2:retrofit:${Versions.retrofit2_version}"
     const val retrofit_gson = "com.squareup.retrofit2:converter-gson:${Versions.retrofit2_version}"
     const val markdown_processor = "com.yydcdut:markdown-processor:${Versions.markdown_processor}"
-
+    const val materialCalendar = "com.applandeo:material-calendar-view:${Versions.material_calendar_version}"
 }

@@ -21,10 +21,8 @@ class AvailabilityRepository @Inject constructor (
 		adult: Int,
 		teen: Int,
 		child: Int
-	){
-		val apiResult: ApiResult<AvailabilityResponse> =
+	): ApiResult<AvailabilityResponse> =
 			safeApiCall(dispatcher) {
 				ryanairApi.getFlightAvailability(origin, destination, dateout, adult, teen, child)
 			}
 	}
-}

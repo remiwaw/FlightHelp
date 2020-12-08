@@ -23,14 +23,15 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-		lifecycleScope.launch {
-			networkManager.observeConnectivity()
-				.collectLatest{ isConnected ->
-					if(isConnected.not()){
-						showNoConnectivityDialog()
-					}
-				}
-		}
+		// TODO this causes ui freeze
+//		lifecycleScope.launch {
+//			networkManager.observeConnectivity()
+//				.collectLatest{ isConnected ->
+//					if(isConnected.not()){
+//						showNoConnectivityDialog()
+//					}
+//				}
+//		}
     }
 
 	private fun showNoConnectivityDialog(){
