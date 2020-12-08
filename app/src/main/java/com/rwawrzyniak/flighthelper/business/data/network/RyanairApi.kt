@@ -6,6 +6,7 @@ import retrofit2.http.Query
 
 interface RyanairApi{
 
+
 	// https://www.ryanair.com/api/booking/v4/en-gb/Availability?roundtrip=false&origin=WRO&destination=DUB&chd=0&dateout=2020-12-30&inf=0&ToUs=AGREED&adt=1
 	@GET("/api/booking/v4/en-gb/Availability")
 	suspend fun getFlightAvailability(
@@ -18,4 +19,9 @@ interface RyanairApi{
 		@Query("roundtrip") roundtrip: Boolean = false,
 		@Query("ToUs") termsOfService: String = "AGREED"
 	): AvailabilityResponse
+
+	companion object{
+		const val API_DESIRED_DATE_INPUT_FORMAT = "dd-MM-yyy"
+		const val API_RETURNED_DATE_OUTPUT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+	}
 }

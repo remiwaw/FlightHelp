@@ -1,10 +1,7 @@
 package com.rwawrzyniak.flighthelper.presentation.flights.state
 
+import com.rwawrzyniak.flighthelper.presentation.flights.CheckAvailabilityQuery
+
 sealed class FlightsAvailabilityIntent {
-    data class Search(val origin: String,
-                      val destination: String,
-                      val dateout: String,
-                      val adult: Int,
-                      val teen: Int,
-                      val child: Int) : FlightsAvailabilityIntent()
+    data class Search(val query: CheckAvailabilityQuery) : FlightsAvailabilityIntent()
 }

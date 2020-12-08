@@ -1,4 +1,4 @@
-package com.rwawrzyniak.flighthelper.presentation.flights
+package com.rwawrzyniak.flighthelper.presentation.flights.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.flighthelper.R
+import com.rwawrzyniak.flighthelper.presentation.flights.FlightModel
 import kotlinx.android.synthetic.main.flight_item_layout.view.duration
 import kotlinx.android.synthetic.main.flight_item_layout.view.flightDate
 import kotlinx.android.synthetic.main.flight_item_layout.view.flightNumber

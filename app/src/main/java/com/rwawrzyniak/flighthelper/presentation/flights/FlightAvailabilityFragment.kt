@@ -8,14 +8,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.DatePicker
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.rwawrzyniak.flighthelper.R
+import com.rwawrzyniak.flighthelper.business.domain.model.Station
 import com.rwawrzyniak.flighthelper.databinding.FragmentFlightAvailabilityBinding
 import com.rwawrzyniak.flighthelper.presentation.UIState
+import com.rwawrzyniak.flighthelper.presentation.flights.adapter.FlightsAdapter
+import com.rwawrzyniak.flighthelper.presentation.flights.adapter.StationsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightAvailabilityViewState
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightsAvailabilityIntent
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
 import ru.ldralighieri.corbind.view.clicks
 import java.text.SimpleDateFormat
 import java.util.*
-
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -35,6 +37,7 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 
 	private lateinit var binding: FragmentFlightAvailabilityBinding
 	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), {}) }
+	private val stationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
 	private val viewModel: FlightsAvailabilityViewModel by viewModels()
 
 	override fun onCreateView(
@@ -50,10 +53,13 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 			lifecycleOwner = viewLifecycleOwner
 		}
 
-		with(binding.albumsRecyclerview){
+		with(binding.albumsRecyclerview) {
 			layoutManager = LinearLayoutManager(requireContext())
 			adapter = flightAdapter
 		}
+
+		binding.originStationInput.setAdapter(stationAdapter)
+		binding.destinationStationInput.setAdapter(stationAdapter)
 
 		return binding.root
 	}
@@ -73,12 +79,14 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 				.collectLatest {
 					viewModel.sendIntent(
 						FlightsAvailabilityIntent.Search(
-							origin = originStationInput.text.toString(),
-							destination = destinationStationInput.text.toString(),
-							dateout = departureDateInput.text.toString(),
-							adult = adultsNumberPicker.value,
-							teen = teenNumberPicker.value,
-							child = childrenNumberPicker.value
+							CheckAvailabilityQuery(
+								origin = originStationInput.text.toString(),
+								destination = destinationStationInput.text.toString(),
+								dateout = departureDateInput.text.toString(),
+								adult = adultsNumberPicker.value,
+								teen = teenNumberPicker.value,
+								child = childrenNumberPicker.value
+							)
 						)
 					)
 				}
@@ -97,6 +105,7 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 	}
 
 	private fun createCalendarPicker(): DatePicker {
+		// TODO provide this date through dependency (for easier testing)
 		val today = Calendar.getInstance()
 
 		return DatePickerBuilder(requireContext(), object : OnSelectDateListener {
@@ -115,7 +124,7 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 	private fun observeStateChanges() {
 		lifecycleScope.launch {
 			viewModel.viewState.collectLatest {
-				when(it){
+				when (it) {
 					UIState.Idle -> {
 					}
 					UIState.Loading -> renderLoadingState()
@@ -144,11 +153,20 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 	}
 
 	private fun rendSuccessState(success: UIState.Success<FlightAvailabilityViewState>) {
+
+
 		visibleGroup.isVisible = true
 		flightAdapter.setData(success.data.flights)
 		noData.isVisible = success.data.flights.isEmpty()
 		retry_button.isVisible = false
 		progress_bar.isVisible = false
 		errorText.isVisible = false
+	}
+
+	private fun setupInOutFlight(stations: List<Station>){
+		require(stations.isNotEmpty())
+		listOf(originStationInput, destinationStationInput).forEach {
+			it
+		}
 	}
 }

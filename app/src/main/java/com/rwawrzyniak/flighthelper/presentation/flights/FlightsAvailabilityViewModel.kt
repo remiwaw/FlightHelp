@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rwawrzyniak.flighthelper.business.data.datasource.AvailabilityRepository
+import com.rwawrzyniak.flighthelper.business.data.datasource.StationsRepository
 import com.rwawrzyniak.flighthelper.business.data.network.ApiResult
 import com.rwawrzyniak.flighthelper.business.data.network.mappers.FlightsAvailibityResponseNetworkMapper
 import com.rwawrzyniak.flighthelper.business.domain.model.AvailabilityResponse
@@ -25,9 +26,10 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 class FlightsAvailabilityViewModel
 @ViewModelInject constructor(
-	private val repository: AvailabilityRepository,
+	private val availabilityRepository: AvailabilityRepository,
 	private val flightsAvailibityResponseNetworkMapper: FlightsAvailibityResponseNetworkMapper,
 	private val useCase: ValidateSearchInputUseCase,
+	private val stationsRepository: StationsRepository,
 	@Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -37,6 +39,7 @@ class FlightsAvailabilityViewModel
 		get() = _state.asFlow()
 
 	init {
+
 		handleIntent()
 	}
 
@@ -57,18 +60,36 @@ class FlightsAvailabilityViewModel
 	private suspend fun actionOnSearch(intent: FlightsAvailabilityIntent.Search) {
 		// Validate
 		val isValid = with(intent){
-			 useCase.validate(origin = origin, destination = destination, dateout = dateout, adult = adult, teen = teen, child = child)
+			 useCase.validate(query)
 		}
 
-		if(isValid) fetchFlightsFromRepo(intent)
+		if(isValid) publishStateWithFlights(intent)
 		// Search
 	}
 
-	private suspend fun fetchFlightsFromRepo(intent: FlightsAvailabilityIntent.Search) {
+	private suspend fun publishStateWithStations() {
 		_state.send(UIState.Loading)
 
-		with(intent){
-			val result: ApiResult<AvailabilityResponse> = repository.checkAvailability(
+		val result = stationsRepository.getStations()
+		val viewState: UIState<FlightAvailabilityViewState> =
+			when (result) {
+				is ApiResult.Success ->
+					UIState.Success(
+						_state.value.toData()?.copy(stations = result.value)
+							?: FlightAvailabilityViewState(stations = result.value, flights = listOf())
+					)
+				is ApiResult.GenericError -> UIState.Error(result.error?.message ?: "Unknown error")
+				ApiResult.NetworkError -> UIState.Error("Network error")
+			}
+
+		_state.send(viewState)
+	}
+
+	private suspend fun publishStateWithFlights(intent: FlightsAvailabilityIntent.Search) {
+		_state.send(UIState.Loading)
+
+		with(intent.query){
+			val result: ApiResult<AvailabilityResponse> = availabilityRepository.checkAvailability(
 				origin = origin,
 				destination = destination,
 				dateout = dateout,
@@ -79,8 +100,10 @@ class FlightsAvailabilityViewModel
 
 			val viewState = when(result){
 				is ApiResult.Success -> {
-						val flightSearchResultModel: FlightSearchResultModel = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
-						UIState.Success(FlightAvailabilityViewState(flightSearchResultModel.flights))
+					val flightSearchResultModel: FlightSearchResultModel = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
+					// We shouldnt pass stations every time view is updated, one time on start is enough (this list is pretty long)
+					val updatedViewState = FlightAvailabilityViewState(flights = flightSearchResultModel.flights)
+					UIState.Success(updatedViewState)
 				}
 				is ApiResult.GenericError -> UIState.Error(result.error?.message ?: "Unknown error")
 				ApiResult.NetworkError -> UIState.Error("Network error")

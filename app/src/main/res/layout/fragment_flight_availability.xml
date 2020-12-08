@@ -19,7 +19,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 			android:hint="@string/originStation"
 			app:errorEnabled="true">
 
-			<com.google.android.material.textfield.TextInputEditText
+			<androidx.appcompat.widget.AppCompatAutoCompleteTextView
 				android:id="@+id/originStationInput"
 				android:layout_width="match_parent"
 				android:layout_height="50dp"
@@ -38,7 +38,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 			android:hint="@string/destinationStation"
 			app:errorEnabled="true">
 
-			<com.google.android.material.textfield.TextInputEditText
+			<androidx.appcompat.widget.AppCompatAutoCompleteTextView
 				android:id="@+id/destinationStationInput"
 				android:layout_width="match_parent"
 				android:layout_height="50dp" />

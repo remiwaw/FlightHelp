@@ -8,8 +8,9 @@ object Versions {
 	const val paging_version = "3.0.0-alpha09"
 	const val coil_version = "0.11.0"
 	const val corbind = "1.4.0"
+	const val coreLibraryDesugaringVersion = "1.0.9"
 
-	const val gradle = "3.5.3"
+	const val gradle = "4.0.0"
     const val compilesdk = 29
     const val minsdk = 23
     const val targetsdk = 29
