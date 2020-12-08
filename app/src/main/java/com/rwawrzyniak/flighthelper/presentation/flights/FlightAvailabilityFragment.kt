@@ -8,13 +8,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.DatePicker
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.rwawrzyniak.flighthelper.R
 import com.rwawrzyniak.flighthelper.business.domain.model.Station
-import com.rwawrzyniak.flighthelper.databinding.FragmentFlightAvailabilityBinding
 import com.rwawrzyniak.flighthelper.presentation.UIState
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.FlightsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.StationsAdapter
@@ -29,43 +29,27 @@ import kotlinx.coroutines.launch
 import ru.ldralighieri.corbind.view.clicks
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availability) {
 
-	private lateinit var binding: FragmentFlightAvailabilityBinding
+
 	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), {}) }
-	private val stationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
+	private val outgoingStationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
+	private val inboundStationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
 	private val viewModel: FlightsAvailabilityViewModel by viewModels()
 
-	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
-	): View {
-		binding = FragmentFlightAvailabilityBinding.inflate(
-			inflater,
-			container,
-			false
-		).apply {
-			lifecycleOwner = viewLifecycleOwner
-		}
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 
-		with(binding.albumsRecyclerview) {
+		with(flights_recyclerview){
 			layoutManager = LinearLayoutManager(requireContext())
 			adapter = flightAdapter
 		}
 
-		binding.originStationInput.setAdapter(stationAdapter)
-		binding.destinationStationInput.setAdapter(stationAdapter)
-
-		return binding.root
-	}
-
-	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
+		originStationInput.setAdapter(inboundStationAdapter)
+		destinationStationInput.setAdapter(outgoingStationAdapter)
 
 		setupOutDateCalendar()
 		setupPassengerNumbersPicker()
