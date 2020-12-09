@@ -1,9 +1,7 @@
 package com.rwawrzyniak.flighthelper.presentation.flights
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,21 +12,34 @@ import com.applandeo.materialcalendarview.DatePicker
 import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.rwawrzyniak.flighthelper.R
-import com.rwawrzyniak.flighthelper.business.domain.model.Station
+import com.rwawrzyniak.flighthelper.business.data.datasource.models.StationModel
 import com.rwawrzyniak.flighthelper.presentation.UIState
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.FlightsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.StationsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightAvailabilityViewState
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightsAvailabilityIntent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_flight_availability.*
+import kotlinx.android.synthetic.main.fragment_flight_availability.adultsNumberPicker
+import kotlinx.android.synthetic.main.fragment_flight_availability.childrenNumberPicker
+import kotlinx.android.synthetic.main.fragment_flight_availability.departureDateInput
+import kotlinx.android.synthetic.main.fragment_flight_availability.destinationStationInput
+import kotlinx.android.synthetic.main.fragment_flight_availability.errorText
+import kotlinx.android.synthetic.main.fragment_flight_availability.flights_recyclerview
+import kotlinx.android.synthetic.main.fragment_flight_availability.noData
+import kotlinx.android.synthetic.main.fragment_flight_availability.originStationInput
+import kotlinx.android.synthetic.main.fragment_flight_availability.progress_bar
+import kotlinx.android.synthetic.main.fragment_flight_availability.retry_button
+import kotlinx.android.synthetic.main.fragment_flight_availability.searchButton
+import kotlinx.android.synthetic.main.fragment_flight_availability.teenNumberPicker
+import kotlinx.android.synthetic.main.fragment_flight_availability.visibleGroup
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import ru.ldralighieri.corbind.view.clicks
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -36,20 +47,15 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 
 
 	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), {}) }
-	private val outgoingStationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
-	private val inboundStationAdapter: StationsAdapter by lazy { StationsAdapter(requireContext()) }
 	private val viewModel: FlightsAvailabilityViewModel by viewModels()
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 
-		with(flights_recyclerview){
+		with(flights_recyclerview) {
 			layoutManager = LinearLayoutManager(requireContext())
 			adapter = flightAdapter
 		}
-
-		originStationInput.setAdapter(inboundStationAdapter)
-		destinationStationInput.setAdapter(outgoingStationAdapter)
 
 		setupOutDateCalendar()
 		setupPassengerNumbersPicker()
@@ -74,6 +80,10 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 						)
 					)
 				}
+		}
+
+		lifecycleScope.launch {
+			viewModel.sendIntent(FlightsAvailabilityIntent.Initialize)
 		}
 	}
 
@@ -137,20 +147,25 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 	}
 
 	private fun rendSuccessState(success: UIState.Success<FlightAvailabilityViewState>) {
-
-
 		visibleGroup.isVisible = true
 		flightAdapter.setData(success.data.flights)
+		setupInOutFlightStations(success.data.stations)
 		noData.isVisible = success.data.flights.isEmpty()
 		retry_button.isVisible = false
 		progress_bar.isVisible = false
 		errorText.isVisible = false
 	}
 
-	private fun setupInOutFlight(stations: List<Station>){
-		require(stations.isNotEmpty())
-		listOf(originStationInput, destinationStationInput).forEach {
-			it
-		}
+	private fun setupInOutFlightStations(stations: List<StationModel>){
+		// TODO there the case where cities are the same in both pickers
+		if(areAdaptersInitialized()) return
+
+		originStationInput.setAdapter(StationsAdapter(requireContext(), R.layout.station_item_layout, stations))
+		originStationInput.threshold = 1
+
+		destinationStationInput.setAdapter(StationsAdapter(requireContext(), R.layout.station_item_layout, stations))
+		destinationStationInput.threshold = 1
 	}
+
+	private fun areAdaptersInitialized() = originStationInput.adapter != null && destinationStationInput.adapter != null
 }

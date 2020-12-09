@@ -33,13 +33,13 @@ class FlightsAvailabilityViewModel
 	@Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+
 	private val flightsAvailabilityIntent = Channel<FlightsAvailabilityIntent>(Channel.UNLIMITED)
 	private val _state = ConflatedBroadcastChannel<UIState<FlightAvailabilityViewState>>(UIState.Idle)
 	val viewState: Flow<UIState<FlightAvailabilityViewState>>
 		get() = _state.asFlow()
 
 	init {
-
 		handleIntent()
 	}
 
@@ -52,6 +52,7 @@ class FlightsAvailabilityViewModel
 			flightsAvailabilityIntent.consumeAsFlow().collectLatest { intent ->
 				when(intent){
 					is FlightsAvailabilityIntent.Search -> actionOnSearch(intent)
+					is FlightsAvailabilityIntent.Initialize -> publishStateWithStations()
 				}
 			}
 		}

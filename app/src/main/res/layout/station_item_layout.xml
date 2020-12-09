@@ -7,19 +7,19 @@
 	>
 
 	<TextView
-		android:id="@+id/stationCode"
-		tools:Text="WRO"
-		android:textSize="18sp"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-	</TextView>
-
-	<TextView
 		android:id="@+id/stationName"
 		android:textSize="18sp"
-		tools:Text="Wroclaw"
+		tools:text="Wroclaw"
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-	</TextView>
+		android:layout_height="wrap_content"
+		android:paddingRight="10dp"/>
+
+	<TextView
+		android:id="@+id/stationCode"
+		tools:text="WRO"
+		android:textSize="18sp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		/>
 
 </LinearLayout>

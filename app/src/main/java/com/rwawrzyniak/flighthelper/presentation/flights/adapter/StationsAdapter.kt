@@ -6,8 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.rwawrzyniak.flighthelper.R
 import com.rwawrzyniak.flighthelper.business.data.datasource.models.StationModel
 import kotlinx.android.synthetic.main.station_item_layout.view.stationCode
@@ -15,10 +13,11 @@ import kotlinx.android.synthetic.main.station_item_layout.view.stationName
 
 class StationsAdapter(context: Context,
                       resource: Int = R.layout.station_item_layout,
-                      private val stations: MutableList<StationModel> = mutableListOf(),
-                      private val tempItems: MutableList<StationModel> = mutableListOf(),
-                      private val suggestions: MutableList<StationModel> = mutableListOf()
+                      private val stations: List<StationModel>
 ) : ArrayAdapter<StationModel>(context, resource) {
+
+    private val tempItems: MutableList<StationModel> = stations.toMutableList()
+    private val suggestions: MutableList<StationModel> = mutableListOf()
 
     override fun getFilter(): Filter {
         return stationFilter
@@ -28,8 +27,12 @@ class StationsAdapter(context: Context,
 
     init {
         stationFilter = object : Filter() {
+            override fun convertResultToString(resultValue: Any?): CharSequence {
+                return (resultValue as StationModel).name
+            }
+
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                return if(constraint != null) {
+                return if (constraint != null) {
                     suggestions.clear()
                     tempItems.forEach {
                         if (it.name.toLowerCase().startsWith(constraint.toString(), ignoreCase = true)) {
@@ -48,32 +51,43 @@ class StationsAdapter(context: Context,
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                val tempStations = results?.values as List<StationModel>
-                if(tempStations.isNotEmpty()){
+                val tempStations = results?.values
 
-                stations.clear()
-                tempStations.forEach {
-                    stations.add(it)
-                }
-                notifyDataSetChanged()
-                } else{
-                    stations.clear()
+                if (tempStations != null && tempStations is List<*> && tempStations.isNotEmpty()) {
+                    clear()
+                    (tempStations as List<StationModel>).forEach {
+                        add(it)
+                    }
+                    notifyDataSetChanged()
+                } else {
+                    clear()
                     notifyDataSetChanged()
                 }
             }
         }
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItem(position: Int): StationModel {
+        return stations[position]
+    }
+
+    override fun getCount(): Int {
+        return stations.size
+    }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val holder: RecyclerView.ViewHolder
         val retView: View
 
-        if(convertView == null){
+        if (convertView == null) {
             retView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.station_item_layout, parent, false)
 
-            retView.stationCode.text =  stations[position].code
-            retView.stationName.text =  stations[position].name
+            retView.stationCode.text = getItem(position).code
+            retView.stationName.text = getItem(position).name
 
             retView
         } else {
@@ -81,20 +95,5 @@ class StationsAdapter(context: Context,
         }
 
         return retView
-    }
-
-    fun setData(data: List<StationModel>){
-        stations.clear()
-        stations.addAll(data)
-        notifyDataSetChanged()
-    }
-
-    class StationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val stationCode = view.stationCode as TextView
-        val stationName = view.stationName as TextView
-    }
-
-    override fun getCount(): Int {
-        return stations.size
     }
 }
