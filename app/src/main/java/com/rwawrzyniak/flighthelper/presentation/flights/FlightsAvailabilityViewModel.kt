@@ -9,6 +9,7 @@ import com.rwawrzyniak.flighthelper.business.data.datasource.AvailabilityReposit
 import com.rwawrzyniak.flighthelper.business.data.datasource.StationsRepository
 import com.rwawrzyniak.flighthelper.business.data.network.ApiResult
 import com.rwawrzyniak.flighthelper.business.data.network.mappers.FlightsAvailibityResponseNetworkMapper
+import com.rwawrzyniak.flighthelper.business.data.network.util.DateUtils
 import com.rwawrzyniak.flighthelper.business.domain.model.AvailabilityResponse
 import com.rwawrzyniak.flighthelper.presentation.UIState
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightAvailabilityViewState
@@ -101,7 +102,9 @@ class FlightsAvailabilityViewModel
 
 			val viewState = when(result){
 				is ApiResult.Success -> {
-					val flightSearchResultModel: FlightSearchResultModel = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
+					val flightSearchResultModel = flightsAvailibityResponseNetworkMapper.mapFromEntity(result.value)
+
+
 					// We shouldnt pass stations every time view is updated, one time on start is enough (this list is pretty long)
 					val updatedViewState = FlightAvailabilityViewState(flights = flightSearchResultModel.flights)
 					UIState.Success(updatedViewState)

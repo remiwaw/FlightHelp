@@ -21,7 +21,6 @@ interface RyanairApi{
 	): AvailabilityResponse
 
 	companion object{
-		const val API_DESIRED_DATE_INPUT_FORMAT = "dd-MM-yyy"
 		const val API_RETURNED_DATE_OUTPUT_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS"
 	}
 }

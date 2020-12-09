@@ -161,6 +161,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        app:constraint_referenced_ids="originStation, destinationStation, departureDate, adultsNumberPicker, teenNumberPicker, childrenNumberPicker, searchButton" />
+        app:constraint_referenced_ids="originStation, destinationStation, departureDate, adultsNumberPicker, teenNumberPicker, childrenNumberPicker, searchButton, flights_recyclerview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package com.rwawrzyniak.flighthelper.presentation.flights
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -65,28 +66,32 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 		observeStateChanges()
 
 		lifecycleScope.launch {
-			searchButton
-				.clicks()
-				.debounce(200)
-				.collectLatest {
-					viewModel.sendIntent(
-						FlightsAvailabilityIntent.Search(
-							CheckAvailabilityQuery(
-								origin = currentlySelectedOrigin,
-								destination = currentlySelectedDestination,
-								dateout = departureDateInput.text.toString(),
-								adult = adultsNumberPicker.value,
-								teen = teenNumberPicker.value,
-								child = childrenNumberPicker.value
-							)
-						)
-					)
-				}
+			askForFlights(searchButton)
+			askForFlights(retry_button)
 		}
 
 		lifecycleScope.launch {
 			viewModel.sendIntent(FlightsAvailabilityIntent.Initialize)
 		}
+	}
+
+	private suspend fun askForFlights(button: Button) {
+		button.clicks()
+			.debounce(200)
+			.collectLatest {
+				viewModel.sendIntent(
+					FlightsAvailabilityIntent.Search(
+						CheckAvailabilityQuery(
+							origin = currentlySelectedOrigin,
+							destination = currentlySelectedDestination,
+							dateout = departureDateInput.text.toString(),
+							adult = adultsNumberPicker.value,
+							teen = teenNumberPicker.value,
+							child = childrenNumberPicker.value
+						)
+					)
+				)
+			}
 	}
 
 	private fun setupPassengerNumbersPicker() {
@@ -106,8 +111,9 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 
 		return DatePickerBuilder(requireContext(), object : OnSelectDateListener {
 			override fun onSelect(calendar: List<Calendar>) {
+				// TODO this is a expected API Format, it should be transformend in ViewModel and presented here as dd-MM-yyyy oder any other desired format
 				val dateFormatted: String =
-					SimpleDateFormat("dd-MM-yyyy", Locale.UK).format(calendar.first().time)
+					SimpleDateFormat("yyyy-MM-dd", Locale.UK).format(calendar.first().time)
 				departureDateInput.setText(dateFormatted)
 			}
 		})

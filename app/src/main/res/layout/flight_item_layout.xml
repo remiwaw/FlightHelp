@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="6dp"
-    app:cardElevation="6dp">
+    android:orientation="horizontal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="5dp">
 
-        <TextView
-            android:id="@+id/flightDate"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            tools:text="12.12.2020" />
+<TextView
+    android:id="@+id/flightDate"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    tools:text="2020.12.20"
+    android:paddingEnd="10dp"
+    android:paddingStart="10dp"
+    />
 
-        <TextView
-            android:id="@+id/flightNumber"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            tools:text="12.12.2020" />
+<TextView
+    android:id="@+id/flightNumber"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    tools:text="RY9124"
+    android:paddingEnd="10dp"
+    />
 
-        <TextView
-            android:id="@+id/duration"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            tools:text="12.12.2020" />
+<TextView
+    android:id="@+id/duration"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    tools:text="8h"
+    android:paddingEnd="10dp"
+    />
 
-        <TextView
-            android:id="@+id/price"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            tools:text="12.12.2020" />
+<TextView
+    android:id="@+id/price"
+    android:layout_width="wrap_content"
+    android:layout_height="50dp"
+    tools:text="50$"
+    android:paddingEnd="10dp"
+    />
 
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</LinearLayout>
