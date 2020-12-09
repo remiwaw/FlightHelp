@@ -19,5 +19,5 @@ TODO:
 * UnitTests
 
 
-![](FlightHelper.gif)
+![](FlighHelper-min.gif)
 
