@@ -11,7 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 	<string name="no_connectivity_title">No connectivity</string>
-	<string name="no_connectivity_explain">Because there is no internet connection app won\'\' be working correctly. Caching is still in progress.</string>
+	<string name="no_connectivity_explain">Because there is no internet connection app won\'\'t be working correctly. Caching is still in progress.</string>
 	<string name="noData">No data</string>
 	<string name="retry">Retry</string>
 	<string name="originStation">From</string>

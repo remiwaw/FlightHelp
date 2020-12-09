@@ -9,14 +9,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import com.afollestad.materialdialogs.MaterialDialog
 import com.rwawrzyniak.flighthelper.R
 import com.rwawrzyniak.flighthelper.business.domain.util.NetworkManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @FlowPreview
@@ -30,6 +28,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     lateinit var inputMethodManager: InputMethodManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
         super.onCreate(savedInstanceState)
 		// TODO this causes ui freeze
 //		lifecycleScope.launch {

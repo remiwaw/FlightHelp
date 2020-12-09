@@ -1,6 +1,8 @@
 package com.rwawrzyniak.flighthelper.presentation.flights
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.Button
 import androidx.core.view.isVisible
@@ -14,12 +16,14 @@ import com.applandeo.materialcalendarview.builders.DatePickerBuilder
 import com.applandeo.materialcalendarview.listeners.OnSelectDateListener
 import com.rwawrzyniak.flighthelper.R
 import com.rwawrzyniak.flighthelper.business.data.datasource.models.StationModel
+import com.rwawrzyniak.flighthelper.presentation.MainActivity
 import com.rwawrzyniak.flighthelper.presentation.UIState
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.FlightsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.adapter.StationsAdapter
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightAvailabilityViewState
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightsAvailabilityIntent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.toolbar
 import kotlinx.android.synthetic.main.fragment_flight_availability.adultsNumberPicker
 import kotlinx.android.synthetic.main.fragment_flight_availability.childrenNumberPicker
 import kotlinx.android.synthetic.main.fragment_flight_availability.departureDateInput
@@ -173,13 +177,23 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 		originStationInput.threshold = 1
 		originStationInput.setOnItemClickListener { adapterView, _, pos, _ ->
 			currentlySelectedOrigin = adapterView.adapter.getItem(pos) as StationModel
+			setTitle()
 		}
 
 		destinationStationInput.setAdapter(StationsAdapter(requireContext(), R.layout.station_item_layout, stations))
 			destinationStationInput.threshold = 1
 		destinationStationInput.setOnItemClickListener { adapterView, _, pos, _ ->
 			currentlySelectedDestination= adapterView.adapter.getItem(pos) as StationModel
+			setTitle()
 		}
+	}
+
+	//TODO This should go to baseFragment
+	private fun setTitle(){
+		val toolbarView = (activity as MainActivity).toolbar
+
+		if(currentlySelectedOrigin.name.isNotBlank() && currentlySelectedDestination.name.isNotBlank())
+			toolbarView?.title = "${currentlySelectedOrigin.name}-${currentlySelectedDestination.name}"
 	}
 
 	private fun areAdaptersInitialized() = originStationInput.adapter != null && destinationStationInput.adapter != null
