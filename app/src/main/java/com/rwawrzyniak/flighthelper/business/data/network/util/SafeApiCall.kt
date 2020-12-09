@@ -1,10 +1,11 @@
 package com.rwawrzyniak.flighthelper.business.data.network.util
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.rwawrzyniak.flighthelper.business.data.network.ErrorResponse
 import com.rwawrzyniak.flighthelper.business.data.network.ApiResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -32,10 +33,10 @@ suspend fun <T> safeApiCall(dispatcher: CoroutineDispatcher, apiCall: suspend ()
 
 private fun convertErrorBody(throwable: HttpException): ErrorResponse? {
     return try {
-    	throwable.response()?.errorBody().toString().let {
-			val jObjError = JSONObject(it)
-			ErrorResponse(jObjError.getJSONObject("error").getString("message"))
-        }
+        // TODO explaining error to user friendly format here
+        val gson = Gson()
+        val type = object : TypeToken<ErrorResponse>() {}.type
+        return gson.fromJson(throwable.response()?.errorBody()?.charStream(), type)
     } catch (exception: Exception) {
         null
     }

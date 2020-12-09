@@ -91,8 +91,8 @@ class FlightsAvailabilityViewModel
 
 		with(intent.query){
 			val result: ApiResult<AvailabilityResponse> = availabilityRepository.checkAvailability(
-				origin = origin,
-				destination = destination,
+				origin = origin.code,
+				destination = destination.code,
 				dateout = dateout,
 				adult = adult,
 				teen = teen,

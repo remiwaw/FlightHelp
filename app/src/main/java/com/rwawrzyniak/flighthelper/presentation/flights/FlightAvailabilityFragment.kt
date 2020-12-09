@@ -48,6 +48,8 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 
 	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), {}) }
 	private val viewModel: FlightsAvailabilityViewModel by viewModels()
+	private var currentlySelectedOrigin: StationModel = StationModel()
+	private var currentlySelectedDestination: StationModel = StationModel()
 
 	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
@@ -70,8 +72,8 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 					viewModel.sendIntent(
 						FlightsAvailabilityIntent.Search(
 							CheckAvailabilityQuery(
-								origin = originStationInput.text.toString(),
-								destination = destinationStationInput.text.toString(),
+								origin = currentlySelectedOrigin,
+								destination = currentlySelectedDestination,
 								dateout = departureDateInput.text.toString(),
 								adult = adultsNumberPicker.value,
 								teen = teenNumberPicker.value,
@@ -158,13 +160,20 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 
 	private fun setupInOutFlightStations(stations: List<StationModel>){
 		// TODO there the case where cities are the same in both pickers
+		// TODO Also could i share this adapter somehow?? Instead of creating two
 		if(areAdaptersInitialized()) return
 
 		originStationInput.setAdapter(StationsAdapter(requireContext(), R.layout.station_item_layout, stations))
 		originStationInput.threshold = 1
+		originStationInput.setOnItemClickListener { adapterView, _, pos, _ ->
+			currentlySelectedOrigin = adapterView.adapter.getItem(pos) as StationModel
+		}
 
 		destinationStationInput.setAdapter(StationsAdapter(requireContext(), R.layout.station_item_layout, stations))
-		destinationStationInput.threshold = 1
+			destinationStationInput.threshold = 1
+		destinationStationInput.setOnItemClickListener { adapterView, _, pos, _ ->
+			currentlySelectedDestination= adapterView.adapter.getItem(pos) as StationModel
+		}
 	}
 
 	private fun areAdaptersInitialized() = originStationInput.adapter != null && destinationStationInput.adapter != null

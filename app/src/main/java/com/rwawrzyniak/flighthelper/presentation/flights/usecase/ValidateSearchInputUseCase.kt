@@ -7,9 +7,14 @@ class ValidateSearchInputUseCase @Inject constructor(){
 
     // This validation could be done also directly on view in xml
     fun validate(query: CheckAvailabilityQuery): Boolean {
-        // TODO just simple validation if not empty
+        // TODO just simple validation if not empty / could be extended
 		with(query){
-			return origin.isNotBlank() && destination.isNotBlank() && dateout.isNotBlank() && adult >= 0 && teen >= 0 && child >= 0
+			return origin.code.isNotBlank() &&
+                origin.name.isNotBlank() &&
+                destination.code.isNotBlank() &&
+                destination.name.isNotBlank() &&
+                dateout.isNotBlank() &&
+                adult >= 0 && teen >= 0 && child >= 0
 		}
     }
 }
