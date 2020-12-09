@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Filter
+import android.widget.TextView
 import com.rwawrzyniak.flighthelper.R
 import com.rwawrzyniak.flighthelper.business.data.datasource.models.StationModel
-import kotlinx.android.synthetic.main.station_item_layout.view.stationCode
-import kotlinx.android.synthetic.main.station_item_layout.view.stationName
 
 class StationsAdapter(context: Context,
                       resource: Int = R.layout.station_item_layout,
@@ -59,6 +58,7 @@ class StationsAdapter(context: Context,
                         add(it)
                     }
                     notifyDataSetChanged()
+
                 } else {
                     clear()
                     notifyDataSetChanged()
@@ -67,33 +67,31 @@ class StationsAdapter(context: Context,
         }
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItem(position: Int): StationModel {
-        return stations[position]
-    }
-
-    override fun getCount(): Int {
-        return stations.size
-    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val retView: View
+        var view: View? = convertView
+        var holder: ViewHolder
 
-        if (convertView == null) {
-            retView = LayoutInflater.from(parent.context)
-                .inflate(R.layout.station_item_layout, parent, false)
+        if(view == null){
+            view = LayoutInflater.from(parent.context).inflate(R.layout.station_item_layout, parent, false)
 
-            retView.stationCode.text = getItem(position).code
-            retView.stationName.text = getItem(position).name
+            val stationNameView = view.findViewById<TextView>(R.id.stationName)
+            val stationCodeView = view.findViewById<TextView>(R.id.stationCode)
 
-            retView
+            holder = ViewHolder(stationCodeView, stationNameView)
+            view.tag = holder
+
         } else {
-            retView = convertView
+            holder = view.tag as ViewHolder
         }
+        // TODO change it to use viewHolder
 
-        return retView
+        holder.codeView.text = requireNotNull(getItem(position)?.code)
+        holder.nameView.text = requireNotNull(getItem(position)?.name)
+
+
+        return requireNotNull(view)
     }
+
+    private data class ViewHolder(val codeView: TextView, val nameView: TextView)
 }
