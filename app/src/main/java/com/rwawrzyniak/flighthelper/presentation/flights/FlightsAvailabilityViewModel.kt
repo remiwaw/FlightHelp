@@ -9,7 +9,6 @@ import com.rwawrzyniak.flighthelper.business.data.datasource.AvailabilityReposit
 import com.rwawrzyniak.flighthelper.business.data.datasource.StationsRepository
 import com.rwawrzyniak.flighthelper.business.data.network.ApiResult
 import com.rwawrzyniak.flighthelper.business.data.network.mappers.FlightsAvailibityResponseNetworkMapper
-import com.rwawrzyniak.flighthelper.business.data.network.util.DateUtils
 import com.rwawrzyniak.flighthelper.business.domain.model.AvailabilityResponse
 import com.rwawrzyniak.flighthelper.presentation.UIState
 import com.rwawrzyniak.flighthelper.presentation.flights.state.FlightAvailabilityViewState

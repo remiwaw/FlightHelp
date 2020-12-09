@@ -14,7 +14,7 @@ class ValidateSearchInputUseCase @Inject constructor(){
                 destination.code.isNotBlank() &&
                 destination.name.isNotBlank() &&
                 dateout.isNotBlank() &&
-                adult >= 0 && teen >= 0 && child >= 0
+                adult + teen + child > 0
 		}
     }
 }
