@@ -19,5 +19,8 @@
 	<string name="departureDate">Departure date</string>
 	<string name="search">search</string>
     <string name="summary">Summary</string>
+    <string name="adults">Adults</string>
+    <string name="teens">Teens</string>
+    <string name="kids">kids</string>
 
 </resources>

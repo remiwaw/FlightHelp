@@ -59,6 +59,15 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/adults"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/adultsNumberPicker"
+        app:layout_constraintStart_toStartOf="@id/adultsNumberPicker"
+        >
+    </TextView>
+
     <NumberPicker
         android:id="@+id/adultsNumberPicker"
         android:layout_width="wrap_content"
@@ -66,6 +75,15 @@
         android:layout_margin="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/departureDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/teens"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/teenNumberPicker"
+        app:layout_constraintStart_toStartOf="@id/teenNumberPicker"
+        >
+    </TextView>
 
     <NumberPicker
         android:id="@+id/teenNumberPicker"
@@ -75,6 +93,15 @@
         app:layout_constraintStart_toEndOf="@id/adultsNumberPicker"
         app:layout_constraintTop_toBottomOf="@id/departureDate" />
 
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="@string/kids"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/childrenNumberPicker"
+        app:layout_constraintStart_toStartOf="@id/childrenNumberPicker"
+        >
+    </TextView>
 
     <NumberPicker
         android:id="@+id/childrenNumberPicker"
