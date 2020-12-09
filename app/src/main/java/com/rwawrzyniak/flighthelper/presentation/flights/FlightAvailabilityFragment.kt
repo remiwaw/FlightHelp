@@ -86,9 +86,13 @@ class FlightAvailabilityFragment @Inject constructor(private val validateSearchI
 		button.clicks()
 			.debounce(200)
 			.collectLatest {
+				val origin = originStationInput.tag
+				val destination = destinationStationInput.tag
+				val safeOrigin = if(origin != null) origin as StationModel else StationModel()
+				val safeDestination = if(destination != null) destination as StationModel else StationModel()
 				val query = CheckAvailabilityQuery(
-					origin = originStationInput.tag as StationModel,
-					destination = destinationStationInput.tag as StationModel,
+					origin = safeOrigin,
+					destination = safeDestination,
 					dateout = departureDateInput.text.toString(),
 					adult = adultsNumberPicker.value,
 					teen = teenNumberPicker.value,
