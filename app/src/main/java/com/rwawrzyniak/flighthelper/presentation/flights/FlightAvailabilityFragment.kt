@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.DatePicker
@@ -51,7 +52,7 @@ import java.util.Locale
 class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availability) {
 
 
-	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), {}) }
+	private val flightAdapter: FlightsAdapter by lazy { FlightsAdapter(mutableListOf(), ::navigateToSummary) }
 	private val viewModel: FlightsAvailabilityViewModel by viewModels()
 	private var currentlySelectedOrigin: StationModel = StationModel()
 	private var currentlySelectedDestination: StationModel = StationModel()
@@ -186,6 +187,10 @@ class FlightAvailabilityFragment : Fragment(R.layout.fragment_flight_availabilit
 			currentlySelectedDestination= adapterView.adapter.getItem(pos) as StationModel
 			setTitle()
 		}
+	}
+
+	fun navigateToSummary(flightSummary : FlightModel){
+		findNavController().navigate(FlightAvailabilityFragmentDirections.actionFirstFragmentToSecondFragment(flightSummary))
 	}
 
 	//TODO This should go to baseFragment

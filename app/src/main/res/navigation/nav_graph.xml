@@ -13,16 +13,19 @@
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            app:destination="@id/SecondFragment"/>
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.rwawrzyniak.flighthelper.presentation.SecondFragment"
+        android:name="com.rwawrzyniak.flighthelper.presentation.details.DetailsFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/fragment_details">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <argument
+            android:name="FlightDetails"
+            app:argType="com.rwawrzyniak.flighthelper.presentation.flights.FlightModel" />
     </fragment>
 </navigation>

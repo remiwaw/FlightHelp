@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
         super.onCreate(savedInstanceState)
 		// TODO this causes ui freeze
 //		lifecycleScope.launch {

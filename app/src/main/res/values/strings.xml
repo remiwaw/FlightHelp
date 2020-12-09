@@ -18,5 +18,6 @@
 	<string name="destinationStation">To</string>
 	<string name="departureDate">Departure date</string>
 	<string name="search">search</string>
+    <string name="summary">Summary</string>
 
 </resources>
