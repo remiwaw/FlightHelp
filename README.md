@@ -1,4 +1,4 @@
-# Clean-Notes
+# FlightHelp
 
 **A simple app using ryanair api**
 
